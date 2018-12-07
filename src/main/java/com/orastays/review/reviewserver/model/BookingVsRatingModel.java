@@ -14,6 +14,6 @@ public class BookingVsRatingModel extends CommonModel {
 	private String bookingRatingId;
 	private String propertyId;
 	private String rating;
-	private BookingVsRatingModel bookingVsRatingModel;
+	private RatingModel ratingModel;
 	private UserReviewModel userReviewModel;
 }
