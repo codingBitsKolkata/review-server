@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,12 +30,15 @@ public class RatingEntity extends CommonEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "rating_id")
+	@JsonProperty("ratingId")
 	private Long ratingId;
 
 	@Column(name = "rating_name")
+	@JsonProperty("ratingName")
 	private String ratingName;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ratingEntity", cascade = { CascadeType.ALL })
+	@JsonProperty("bookingVsRatings")
 	private List<BookingVsRatingEntity> bookingVsRatingEntities;
 	
 

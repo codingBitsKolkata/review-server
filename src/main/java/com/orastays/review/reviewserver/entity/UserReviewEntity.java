@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,27 +31,35 @@ public class UserReviewEntity extends CommonEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_review_id")
+	@JsonProperty("userReviewId")
 	private Long userReviewId;
 
 	@Column(name = "user_id")
+	@JsonProperty("userId")
 	private Long userId;
 
 	@Column(name = "property_id")
+	@JsonProperty("propertyId")
 	private Long propertyId;
 
 	@Column(name = "booking_id")
+	@JsonProperty("bookingId")
 	private Long bookingId;
 
 	@Column(name = "comment")
+	@JsonProperty("comment")
 	private String comment;
 
 	@Column(name = "language_id")
+	@JsonProperty("languageId")
 	private Long languageId;
 
 	@Column(name = "parent_id")
+	@JsonProperty("parentId")
 	private Long parentId;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "userReviewEntity", cascade = { CascadeType.ALL })
+	@JsonProperty("bookingVsRatings")
 	private List<BookingVsRatingEntity> bookingVsRatingEntities;
 
 	@Override

@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,20 +29,25 @@ public class BookingVsRatingEntity extends CommonEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "booking_rating_id")
+	@JsonProperty("bookingRatingId")
 	private Long bookingRatingId;
 
 	@Column(name = "property_id")
+	@JsonProperty("propertyId")
 	private Long propertyId;
 
 	@Column(name = "rating")
+	@JsonProperty("rating")
 	private String rating;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "user_review_id", nullable = false)
+	@JsonProperty("userReview")
 	private UserReviewEntity userReviewEntity;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "rating_id", nullable = false)
+	@JsonProperty("ratingS")
 	private RatingEntity ratingEntity;
 
 	@Override

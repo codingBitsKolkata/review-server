@@ -9,6 +9,8 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,18 +27,23 @@ public abstract class CommonEntity implements Serializable {
 	private static final long serialVersionUID = -5996827289755052738L;
 	
 	@Column(name = "status")
+	@JsonProperty("status")
 	private Integer status;
 
 	@Column(name = "created_date")
+	@JsonProperty("createdDate")
 	private String createdDate;
 
 	@Column(name = "created_by")
+	@JsonProperty("createdBy")
 	private Long createdBy;
 
 	@Column(name = "modified_date")
+	@JsonProperty("modifiedDate")
 	private String modifiedDate;
 
 	@Column(name = "modified_by")
+	@JsonProperty("modifiedBy")
 	private Long modifiedBy;
 
 }
