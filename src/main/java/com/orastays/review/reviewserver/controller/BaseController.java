@@ -1,4 +1,4 @@
-package com.orastays.review.controller;
+package com.orastays.review.reviewserver.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

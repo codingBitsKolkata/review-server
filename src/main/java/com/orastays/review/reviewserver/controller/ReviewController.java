@@ -1,4 +1,4 @@
-package com.orastays.review.controller;
+package com.orastays.review.reviewserver.controller;
 
 import java.util.Map.Entry;
 
