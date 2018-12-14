@@ -25,22 +25,22 @@ repositories {
 
 dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
-	implementation('org.springframework.boot:spring-boot-starter-security')
+	//implementation('org.springframework.boot:spring-boot-starter-security')
 	implementation('org.springframework.boot:spring-boot-starter-web')
-	runtimeOnly('org.springframework.boot:spring-boot-devtools')
-	compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-oauth2', version: '1.2.3.RELEASE'
+	//runtimeOnly('org.springframework.boot:spring-boot-devtools')
+	//compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-oauth2', version: '1.2.3.RELEASE'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-logging', version: '2.0.4.RELEASE'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: '2.0.4.RELEASE'
 	compile group: 'org.springframework.security', name: 'spring-security-jwt', version: '1.0.9.RELEASE'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: '1.5.15.RELEASE'
-	compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-client', version: '1.4.5.RELEASE'
+	//compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-client', version: '1.4.5.RELEASE'
 	compile group: 'org.springframework', name: 'spring-tx'
 	
-	compile('org.springframework.boot:spring-boot-starter-actuator')
-	compile('org.springframework.cloud:spring-cloud-starter-eureka')
-	compile('org.springframework.cloud:spring-cloud-starter-hystrix')
-	compile('org.springframework.cloud:spring-cloud-starter-config')
-	compile('org.springframework.cloud:spring-cloud-starter-zipkin')
+	//compile('org.springframework.boot:spring-boot-starter-actuator')
+	//compile('org.springframework.cloud:spring-cloud-starter-eureka')
+	//compile('org.springframework.cloud:spring-cloud-starter-hystrix')
+	//compile('org.springframework.cloud:spring-cloud-starter-config')
+	//compile('org.springframework.cloud:spring-cloud-starter-zipkin')
 	
 	
 	runtimeOnly('mysql:mysql-connector-java')

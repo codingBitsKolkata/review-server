@@ -1,4 +1,4 @@
-package com.orastays.review.reviewserver.config;
+/*package com.orastays.review.reviewserver.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,4 +16,4 @@ public class WebSecurityConfig extends ResourceServerConfigurerAdapter {
 				.permitAll();
 
 	}
-}
+}*/
