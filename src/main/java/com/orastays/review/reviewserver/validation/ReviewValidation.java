@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.orastays.review.reviewserver.entity.RatingEntity;
 import com.orastays.review.reviewserver.exceptions.FormExceptions;
-import com.orastays.review.reviewserver.helper.ReviewConstant;
 import com.orastays.review.reviewserver.helper.Status;
 import com.orastays.review.reviewserver.helper.Util;
 import com.orastays.review.reviewserver.model.BookingModel;
@@ -37,7 +36,6 @@ public class ReviewValidation extends AuthorizeUserValidation {
 			logger.debug("validateAddReview -- Start");
 		}
 		
-		Util.printLog(userReviewModel, ReviewConstant.INCOMING, "Review Add", request);
 		Map<String, Exception> exceptions = new LinkedHashMap<>();
 		UserModel userModel = getUserDetails(userReviewModel.getUserToken());
 		
