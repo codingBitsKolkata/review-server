@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import com.orastays.review.reviewserver.entity.UserReviewEntity;
+import com.orastays.review.reviewserver.helper.Status;
 import com.orastays.review.reviewserver.helper.Util;
 import com.orastays.review.reviewserver.model.UserReviewModel;
 
@@ -20,8 +21,22 @@ public class UserReviewConverter extends CommonConverter implements BaseConverte
 
 	@Override
 	public UserReviewEntity modelToEntity(UserReviewModel m) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		if (logger.isInfoEnabled()) {
+			logger.info("modelToEntity -- START");
+		}
+		
+		UserReviewEntity userReviewEntity = new UserReviewEntity();
+		userReviewEntity = (UserReviewEntity) Util.transform(modelMapper, m, userReviewEntity);
+		userReviewEntity.setStatus(Status.ACTIVE.ordinal());
+		userReviewEntity.setCreatedBy(Long.parseLong(m.getUserId()));
+		userReviewEntity.setCreatedDate(Util.getCurrentDateTime());
+		
+		if (logger.isInfoEnabled()) {
+			logger.info("modelToEntity -- END");
+		}
+		
+		return userReviewEntity;
 	}
 
 	@Override

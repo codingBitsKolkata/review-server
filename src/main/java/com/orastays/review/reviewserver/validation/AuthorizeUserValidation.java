@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.gson.Gson;
+import com.orastays.review.reviewserver.dao.RatingDAO;
+import com.orastays.review.reviewserver.dao.UserReviewDAO;
 import com.orastays.review.reviewserver.exceptions.FormExceptions;
 import com.orastays.review.reviewserver.helper.MessageUtil;
+import com.orastays.review.reviewserver.model.CommonModel;
 import com.orastays.review.reviewserver.model.ResponseModel;
 import com.orastays.review.reviewserver.model.UserModel;
 import com.orastays.review.reviewserver.service.ReviewService;
@@ -39,6 +44,12 @@ public class AuthorizeUserValidation {
 	@Autowired
 	protected ReviewService reviewService; 
 	
+	@Autowired
+	protected RatingDAO ratingDAO;
+	
+	@Autowired
+	protected UserReviewDAO userReviewDAO;
+	
 	public UserModel getUserDetails(String userToken) throws FormExceptions {
 
 		if (logger.isInfoEnabled()) {
@@ -48,19 +59,28 @@ public class AuthorizeUserValidation {
 		Map<String, Exception> exceptions = new LinkedHashMap<>();
 		UserModel userModel = null;
 		try {
-			ResponseModel responseModel = restTemplate.getForObject("http://AUTH-SERVER/api/check-token?userToken="+userToken, ResponseModel.class);
-			userModel = (UserModel) responseModel.getResponseBody();
-			if(Objects.isNull(userModel)) {
-				exceptions.put(messageUtil.getBundle("token.invalid.code"), new Exception(messageUtil.getBundle("token.invalid.message")));
+			
+			// Validate User Token
+			if(StringUtils.isBlank(userToken)) {
+				exceptions.put(messageUtil.getBundle("user.token.null.code"), new Exception(messageUtil.getBundle("user.token.null.message")));
+			} else {
+				ResponseModel responseModel = restTemplate.getForObject("http://localhost:7080/api/check-token?userToken="+userToken, ResponseModel.class);
+				Gson gson = new Gson();
+				String jsonString = gson.toJson(responseModel.getResponseBody());
+				userModel = gson.fromJson(jsonString, UserModel.class);
+				if(Objects.isNull(userModel)) {
+					exceptions.put(messageUtil.getBundle("session.expires.code"), new Exception(messageUtil.getBundle("session.expires.message")));
+				}
+				
+				if (logger.isInfoEnabled()) {
+					logger.info("userModel ==>> "+userModel);
+				}
 			}
 			
-			if (logger.isInfoEnabled()) {
-				logger.info("userModel ==>> "+userModel);
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			// Disabled the below line to pass the Token Validation
-			//exceptions.put(messageUtil.getBundle("token.invalid.code"), new Exception(messageUtil.getBundle("token.invalid.message")));
+			exceptions.put(messageUtil.getBundle("session.expires.code"), new Exception(messageUtil.getBundle("session.expires.message")));
 		}
 		
 		if (exceptions.size() > 0)
@@ -73,28 +93,35 @@ public class AuthorizeUserValidation {
 		return userModel;
 	}
 	
-	public UserModel validateLanguage(String languageId) throws FormExceptions {
+	public CommonModel validateLanguage(String languageId) throws FormExceptions {
 
 		if (logger.isInfoEnabled()) {
 			logger.info("validateLanguage -- START");
 		}
 		
 		Map<String, Exception> exceptions = new LinkedHashMap<>();
-		UserModel userModel = null;
+		CommonModel commonModel = null;
 		try {
-			ResponseModel responseModel = restTemplate.getForObject("http://AUTH-SERVER/api/check-language?languageId="+languageId, ResponseModel.class);
-			userModel = (UserModel) responseModel.getResponseBody();
-			if(Objects.isNull(userModel)) {
-				exceptions.put(messageUtil.getBundle("language.id.invalid.code"), new Exception(messageUtil.getBundle("language.id.invalid.message")));
+			
+			if(StringUtils.isBlank(languageId)) {
+				exceptions.put(messageUtil.getBundle("language.id.null.code"), new Exception(messageUtil.getBundle("language.id.null.message")));
+			} else {
+				ResponseModel responseModel = restTemplate.getForObject("http://localhost:7080/api/check-language?languageId="+languageId, ResponseModel.class);
+				Gson gson = new Gson();
+				String jsonString = gson.toJson(responseModel.getResponseBody());
+				commonModel = gson.fromJson(jsonString, CommonModel.class);
+				if(Objects.isNull(commonModel)) {
+					exceptions.put(messageUtil.getBundle("language.id.invalid.code"), new Exception(messageUtil.getBundle("language.id.invalid.message")));
+				}
+				
+				if (logger.isInfoEnabled()) {
+					logger.info("commonModel ==>> "+commonModel);
+				}
 			}
 			
-			if (logger.isInfoEnabled()) {
-				logger.info("userModel ==>> "+userModel);
-			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			// Disabled the below line to pass the Language Validation
-			//exceptions.put(messageUtil.getBundle("language.id.invalid.code"), new Exception(messageUtil.getBundle("language.id.invalid.message")));
+			exceptions.put(messageUtil.getBundle("language.id.invalid.code"), new Exception(messageUtil.getBundle("language.id.invalid.message")));
 		}
 		
 		if (exceptions.size() > 0)
@@ -104,6 +131,6 @@ public class AuthorizeUserValidation {
 			logger.info("validateLanguage -- END");
 		}
 		
-		return userModel;
+		return commonModel;
 	}
 }

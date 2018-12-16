@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import com.orastays.review.reviewserver.converter.RatingConverter;
 import com.orastays.review.reviewserver.converter.UserReviewConverter;
+import com.orastays.review.reviewserver.dao.BookingVsRatingDAO;
 import com.orastays.review.reviewserver.dao.RatingDAO;
 import com.orastays.review.reviewserver.dao.UserReviewDAO;
 import com.orastays.review.reviewserver.validation.ReviewValidation;
@@ -28,4 +29,7 @@ public abstract class BaseServiceImpl {
 	
 	@Autowired
 	protected RatingDAO ratingDAO;
+	
+	@Autowired
+	protected BookingVsRatingDAO bookingVsRatingDAO;
 }

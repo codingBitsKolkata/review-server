@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiResponses;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api")
-@Api(value = "Review", description = "Rest API for Adding Review", tags = "Review")
+@Api(value = "Review", tags = "Review")
 public class ReviewController extends BaseController {
 	
 private static final Logger logger = LogManager.getLogger(ReviewController.class);
@@ -46,20 +46,26 @@ private static final Logger logger = LogManager.getLogger(ReviewController.class
 		}
 
 		ResponseModel responseModel = new ResponseModel();
-		
+		Util.printLog(userReviewModel, ReviewConstant.INCOMING, "Add Review", request);
 		try {
-			UserReviewModel userReviewModel2 = reviewService.addReview(userReviewModel);
-			responseModel.setResponseBody(userReviewModel2);
+			reviewService.addReview(userReviewModel);
+			responseModel.setResponseBody(messageUtil.getBundle("review.add.success"));
 			responseModel.setResponseCode(messageUtil.getBundle(ReviewConstant.COMMON_SUCCESS_CODE));
 			responseModel.setResponseMessage(messageUtil.getBundle(ReviewConstant.COMMON_SUCCESS_MESSAGE));
 		} catch (FormExceptions fe) {
+
 			for (Entry<String, Exception> entry : fe.getExceptions().entrySet()) {
 				responseModel.setResponseCode(entry.getKey());
 				responseModel.setResponseMessage(entry.getValue().getMessage());
+				if (logger.isInfoEnabled()) {
+					logger.info("FormExceptions in Add Review -- "+Util.errorToString(fe));
+				}
 				break;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (logger.isInfoEnabled()) {
+				logger.info("Exception in Add Review -- "+Util.errorToString(e));
+			}
 			responseModel.setResponseCode(messageUtil.getBundle(ReviewConstant.COMMON_ERROR_CODE));
 			responseModel.setResponseMessage(messageUtil.getBundle(ReviewConstant.COMMON_ERROR_MESSAGE));
 		}
