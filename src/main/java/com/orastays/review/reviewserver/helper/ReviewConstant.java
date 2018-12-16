@@ -13,5 +13,6 @@ public final class ReviewConstant {
 	public static final String FOR_ROW = "for ROW";
 	public static final String STATUS = "status";
 	public static final String LANGUAGEID = "languageId";
+	public static final int STATUS_INACTIVE = 2;
 	
 }

@@ -52,7 +52,7 @@ public class ReviewValidation extends AuthorizeUserValidation {
 				exceptions.put(messageUtil.getBundle("propertyId.null.code"), new Exception(messageUtil.getBundle("propertyId.null.code")));
 			} else {
 				//Check propertyId for number
-				if(Util.isNumber(userReviewModel.getPropertyId())){
+				if(Util.isNumeric(userReviewModel.getPropertyId())){
 					exceptions.put(messageUtil.getBundle("propertyId.number.invalid.code"), new Exception(messageUtil.getBundle("propertyId.number.invalid.code")));
 				} 
 				//Call property-list server using Rest template
@@ -67,7 +67,7 @@ public class ReviewValidation extends AuthorizeUserValidation {
 				} 
 			} else {
 				//Check booking-id for number
-				if(Util.isNumber(userReviewModel.getBookingId())){
+				if(Util.isNumeric(userReviewModel.getBookingId())){
 					exceptions.put(messageUtil.getBundle("bookingId.number.invalid.code"), new Exception(messageUtil.getBundle("bookingId.number.invalid.code")));
 				} 
 				//Call booking server using Rest template with bookingID and userID
@@ -97,7 +97,7 @@ public class ReviewValidation extends AuthorizeUserValidation {
 						exceptions.put(messageUtil.getBundle("rating.null.code"), new Exception(messageUtil.getBundle("rating.null.message")));
 					}
 					//Check rating for number
-					if(Util.isNumber(bookingVsRatingModel.getRating())){
+					if(Util.isNumeric(bookingVsRatingModel.getRating())){
 						exceptions.put(messageUtil.getBundle("rating.number.invalid.code"), new Exception(messageUtil.getBundle("rating.number.invalid.message")));
 					}
 					//Check ratingId for null
@@ -105,7 +105,7 @@ public class ReviewValidation extends AuthorizeUserValidation {
 						exceptions.put(messageUtil.getBundle("ratingId.null.code"), new Exception(messageUtil.getBundle("ratingID.null.message")));
 					}
 					//Check ratingId for number
-					if(Util.isNumber(bookingVsRatingModel.getBookingRatingId())){
+					if(Util.isNumeric(bookingVsRatingModel.getBookingRatingId())){
 						exceptions.put(messageUtil.getBundle("ratingId.number.invalid.code"), new Exception(messageUtil.getBundle("ratingID.number.invalid.message")));
 					} else {
 						//Check ratingId for active and present in DB
@@ -113,7 +113,7 @@ public class ReviewValidation extends AuthorizeUserValidation {
 						RatingModel ratingModel2 = reviewService.fetchRatingStatus(bookingVsRatingModel.getRatingModel().getRatingId());
 						if(Objects.isNull(ratingModel2)) {
 							exceptions.put(messageUtil.getBundle("rating.present.invalid.code"), new Exception(messageUtil.getBundle("rating.present.invalid.message")));
-						} else if (ratingModel2.getStatus().equals("2") ) {
+						} else if (ratingModel2.getStatus().equals(ReviewConstant.STATUS_INACTIVE) ) {
 							exceptions.put(messageUtil.getBundle("rating.active.invalid.code"), new Exception(messageUtil.getBundle("rating.active.invalid.message")));
 						}
 					}
