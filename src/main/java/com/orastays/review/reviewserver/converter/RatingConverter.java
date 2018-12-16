@@ -20,7 +20,6 @@ public class RatingConverter extends CommonConverter implements BaseConverter<Ra
 
 	@Override
 	public RatingEntity modelToEntity(RatingModel m) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

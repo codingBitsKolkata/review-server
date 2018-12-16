@@ -48,6 +48,7 @@ public class UserReviewConverter extends CommonConverter implements BaseConverte
 
 		UserReviewModel userReviewModel = new UserReviewModel();
 		userReviewModel = (UserReviewModel) Util.transform(modelMapper, e, userReviewModel);
+		userReviewModel.setBookingVsRatingModels(bookingVsRatingConverter.entityListToModelList(e.getBookingVsRatingEntities()));
 
 		if (logger.isInfoEnabled()) {
 			logger.info("entityToModel -- END");

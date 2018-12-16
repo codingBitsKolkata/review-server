@@ -21,7 +21,6 @@ public class BookingVsRatingConverter extends CommonConverter
 
 	@Override
 	public BookingVsRatingEntity modelToEntity(BookingVsRatingModel m) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -34,6 +33,7 @@ public class BookingVsRatingConverter extends CommonConverter
 
 		BookingVsRatingModel bookingVsRatingModel = new BookingVsRatingModel();
 		bookingVsRatingModel = (BookingVsRatingModel) Util.transform(modelMapper, e, bookingVsRatingModel);
+		bookingVsRatingModel.setRatingModel(ratingConverter.entityToModel(e.getRatingEntity()));
 
 		if (logger.isInfoEnabled()) {
 			logger.info("entityToModel -- END");

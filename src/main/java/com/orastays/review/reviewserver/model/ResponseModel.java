@@ -3,6 +3,8 @@
  */
 package com.orastays.review.reviewserver.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -15,6 +17,7 @@ import lombok.ToString;
 @Setter
 @EqualsAndHashCode(callSuper = false)
 @ToString
+@JsonInclude(Include.NON_NULL)
 public class ResponseModel {
 
 	@ApiModelProperty(notes = "Response Code", required = false)
