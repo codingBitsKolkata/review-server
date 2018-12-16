@@ -152,9 +152,7 @@ private static final Logger logger = LogManager.getLogger(ReviewController.class
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 201, message = "Please Try after Sometime!!!"),
 			@ApiResponse(code = 202, message = "Token Required"),
-			@ApiResponse(code = 203, message = "Token Expires!!!Please login to continue..."),
-			@ApiResponse(code = 204, message = "Language Id Required"),
-			@ApiResponse(code = 205, message = "Invalid Language ID") })
+			@ApiResponse(code = 203, message = "Token Expires!!!Please login to continue...") })
 	public ResponseEntity<ResponseModel> fetchRating(@RequestParam(value = "userToken", required = true) String userToken) {
 	
 		if (logger.isInfoEnabled()) {
