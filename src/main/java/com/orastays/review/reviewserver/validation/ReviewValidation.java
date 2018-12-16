@@ -13,10 +13,9 @@ import org.springframework.stereotype.Component;
 
 import com.orastays.review.reviewserver.exceptions.FormExceptions;
 import com.orastays.review.reviewserver.helper.ReviewConstant;
-import com.orastays.review.reviewserver.helper.Status;
 import com.orastays.review.reviewserver.helper.Util;
 import com.orastays.review.reviewserver.model.BookingVsRatingModel;
-import com.orastays.review.reviewserver.model.CommonModel;
+import com.orastays.review.reviewserver.model.RatingModel;
 import com.orastays.review.reviewserver.model.ResponseModel;
 import com.orastays.review.reviewserver.model.UserModel;
 import com.orastays.review.reviewserver.model.UserReviewModel;
@@ -26,52 +25,6 @@ import com.orastays.review.reviewserver.model.UserReviewModel;
 public class ReviewValidation extends AuthorizeUserValidation {
 
 	private static final Logger logger = LogManager.getLogger(ReviewValidation.class);
-	
-	public void validateLanguageWithUserToken(Object object, String message) throws FormExceptions {
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("validateLanguageWithUserToken -- Start");
-		}
-
-		Util.printLog(object, ReviewConstant.INCOMING, message, request);
-		if (object instanceof CommonModel) {
-			CommonModel commonModel = (CommonModel) object;
-			validateTokenAndLanguage(commonModel, message);
-		}
-		
-		if (logger.isDebugEnabled()) {
-			logger.debug("validateLanguageWithUserToken -- End");
-		}
-	}
-	
-	private void validateTokenAndLanguage(CommonModel commonModel, String message) throws FormExceptions {
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("validateLanguageWithUserToken -- Start");
-		}
-		
-		Map<String, Exception> exceptions = new LinkedHashMap<>();
-		// Validate User Token
-		if(StringUtils.isBlank(commonModel.getUserToken())) {
-			exceptions.put(messageUtil.getBundle("token.null.code"), new Exception(messageUtil.getBundle("token.null.message")));
-		} else {
-			getUserDetails(commonModel.getUserToken());
-		}
-		
-		// Validate Language
-		if(StringUtils.isBlank(commonModel.getLanguageId())) {
-			exceptions.put(messageUtil.getBundle("language.id.null.code"), new Exception(messageUtil.getBundle("language.id.null.message")));
-		} else {
-			validateLanguage(commonModel.getLanguageId());
-		}
-	
-		if (exceptions.size() > 0)
-			throw new FormExceptions(exceptions);
-		
-		if (logger.isDebugEnabled()) {
-			logger.debug("validateLanguageWithUserToken -- End");
-		}
-	}
 
 	//Validation while adding review
 	public UserReviewModel validateAddReview(UserReviewModel userReviewModel) throws FormExceptions {
@@ -91,7 +44,7 @@ public class ReviewValidation extends AuthorizeUserValidation {
 				exceptions.put(messageUtil.getBundle("token.null.code"), new Exception(messageUtil.getBundle("token.null.code")));
 			} else {
 				//Validate the token
-				validateLanguageWithUserToken(userReviewModel.getUserToken(), "Verify userToken");
+				getUserDetails(userReviewModel.getUserToken());
 			}
 			
 			//Check propertyId for null
@@ -145,7 +98,7 @@ public class ReviewValidation extends AuthorizeUserValidation {
 					}
 					//Check rating for number
 					if(Util.isNumber(bookingVsRatingModel.getRating())){
-						exceptions.put(messageUtil.getBundle("rating.number.invalid.code"), new Exception(messageUtil.getBundle("rating.number.invalid.code")));
+						exceptions.put(messageUtil.getBundle("rating.number.invalid.code"), new Exception(messageUtil.getBundle("rating.number.invalid.message")));
 					}
 					//Check ratingId for null
 					if(StringUtils.isBlank(bookingVsRatingModel.getBookingRatingId())){
@@ -153,20 +106,22 @@ public class ReviewValidation extends AuthorizeUserValidation {
 					}
 					//Check ratingId for number
 					if(Util.isNumber(bookingVsRatingModel.getBookingRatingId())){
-						exceptions.put(messageUtil.getBundle("ratingId.number.invalid.code"), new Exception(messageUtil.getBundle("ratingID.number.invalid.code")));
-					}
-					//Check ratingId for active in DB
-					if(bookingVsRatingModel.getStatus() == Status.INACTIVE.ordinal()){
-						exceptions.put(messageUtil.getBundle("ratingId.status.invalid.code"), new Exception(messageUtil.getBundle("ratingId.status.invalid.code")));
+						exceptions.put(messageUtil.getBundle("ratingId.number.invalid.code"), new Exception(messageUtil.getBundle("ratingID.number.invalid.message")));
+					} else {
+						//Check ratingId for active and present in DB
+						//rating Id from Ui, Check if that id is present in db and then check if its status is 1
+						RatingModel ratingModel2 = reviewService.fetchRatingStatus(bookingVsRatingModel.getRatingModel().getRatingId());
+						if(Objects.isNull(ratingModel2)) {
+							exceptions.put(messageUtil.getBundle("rating.present.invalid.code"), new Exception(messageUtil.getBundle("rating.present.invalid.message")));
+						} else if (ratingModel2.getStatus().equals("2") ) {
+							exceptions.put(messageUtil.getBundle("rating.active.invalid.code"), new Exception(messageUtil.getBundle("rating.active.invalid.message")));
+						}
 					}
 				}
 			}
 			//Check whether the user has already given review for that particular property
 			UserReviewModel userReviewModel2 = reviewService.fetchReviewedUserIdPropertyId(userReviewModel.getUserId(), userReviewModel.getPropertyId());
-			if(Objects.isNull(userReviewModel2.getUserId()) || Objects.isNull(userReviewModel2.getPropertyId()) ) {
-				userReviewModel.setUserId(userReviewModel2.getUserId());
-				userReviewModel.setPropertyId(userReviewModel2.getPropertyId());
-			} else {
+			if(Objects.nonNull(userReviewModel2)){
 				exceptions.put(messageUtil.getBundle("review.present.code"), new Exception(messageUtil.getBundle("review.present.message")));
 			}
 		}
@@ -214,6 +169,7 @@ public class ReviewValidation extends AuthorizeUserValidation {
 		}
 		
 		Map<String, Exception> exceptions = new LinkedHashMap<>();
+		//Get the property model with respective fields
 		UserModel userModel = null;
 		try {
 			ResponseModel responseModel = restTemplate.getForObject("http://PROPERTY-LIST-SERVER/api/check-property?propertyId="+propertyId, ResponseModel.class);

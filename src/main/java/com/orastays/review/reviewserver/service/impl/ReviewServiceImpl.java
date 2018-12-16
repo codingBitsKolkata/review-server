@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.orastays.review.reviewserver.entity.UserReviewEntity;
 import com.orastays.review.reviewserver.exceptions.FormExceptions;
+import com.orastays.review.reviewserver.model.RatingModel;
 import com.orastays.review.reviewserver.model.UserReviewModel;
 import com.orastays.review.reviewserver.service.ReviewService;
 
@@ -81,5 +82,34 @@ public class ReviewServiceImpl extends BaseServiceImpl implements ReviewService 
 		}
 		
 		return userReviewModel;
+	}
+
+	@Override
+	public RatingModel fetchRatingStatus(String ratingId) {
+
+		if (logger.isInfoEnabled()) {
+			logger.info("fetchRatingStatus -- START");
+		}
+		
+		RatingModel ratingModel = null;
+		try {
+			Map<String, String> innerMap1 = new LinkedHashMap<>();
+			innerMap1.put("ratingId", ratingId);
+	
+			Map<String, Map<String, String>> outerMap1 = new LinkedHashMap<>();
+			outerMap1.put("eq", innerMap1);
+	
+			Map<String, Map<String, Map<String, String>>> alliasMap = new LinkedHashMap<>();
+			alliasMap.put(entitymanagerPackagesToScan+".RatingEntity", outerMap1);
+	
+			ratingModel = ratingConverter.entityToModel(ratingDAO.fetchObjectBySubCiteria(alliasMap));
+			
+		} catch (Exception e) {
+			logger.info("Exception occured in fetchRatingStatus");
+		}
+		if (logger.isInfoEnabled()) {
+			logger.info("fetchRatingStatus -- END");
+		}
+		return ratingModel;
 	}
 }
