@@ -58,6 +58,10 @@ public class UserReviewEntity extends CommonEntity {
 	@JsonProperty("parentId")
 	private Long parentId;
 	
+	@Column(name = "user_type_id")
+	@JsonProperty("userTypeId")
+	private String userTypeId;
+	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "userReviewEntity", cascade = { CascadeType.ALL })
 	@JsonProperty("bookingVsRatings")
 	private List<BookingVsRatingEntity> bookingVsRatingEntities;

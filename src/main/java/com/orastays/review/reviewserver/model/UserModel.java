@@ -30,4 +30,7 @@ public class UserModel extends CommonModel {
 	
 	@JsonProperty("emailId")
 	private String emailId;
+	
+	@JsonProperty("userTypeId")
+	private String userTypeId;
 }

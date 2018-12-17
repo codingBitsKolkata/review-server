@@ -39,6 +39,9 @@ public class UserReviewModel extends CommonModel {
 	@JsonProperty("parentId")
 	private String parentId;
 	
+	@JsonProperty("userTypeId")
+	private String userTypeId;
+	
 	@JsonProperty("bookingVsRatings")
 	private List<BookingVsRatingModel> bookingVsRatingModels;
 }
