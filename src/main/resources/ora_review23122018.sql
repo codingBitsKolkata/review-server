@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 17, 2018 at 02:19 PM
+-- Generation Time: Dec 23, 2018 at 04:27 PM
 -- Server version: 5.7.23
 -- PHP Version: 7.2.10
 
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `booking_vs_rating` (
   PRIMARY KEY (`booking_rating_id`),
   KEY `FKiee6xtfv1thmr9ucouwi3jm93` (`rating_id`),
   KEY `FKkevr8f4ymijf42ytodcf4fxu8` (`user_review_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -59,10 +59,20 @@ CREATE TABLE IF NOT EXISTS `master_rating` (
   `modified_by` bigint(20) DEFAULT NULL,
   `modified_date` varchar(255) DEFAULT NULL,
   `status` int(11) DEFAULT NULL,
-  `rating_flag` varchar(255) DEFAULT NULL,
   `rating_name` varchar(255) DEFAULT NULL,
+  `user_type_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`rating_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `master_rating`
+--
+
+INSERT INTO `master_rating` (`rating_id`, `created_by`, `created_date`, `modified_by`, `modified_date`, `status`, `rating_name`, `user_type_id`) VALUES
+(1, 1, '2018-12-10 22:22:31', NULL, NULL, 1, 'Cleanliness', '2'),
+(2, 1, '2018-12-10 22:22:31', NULL, NULL, 1, 'Service', '2'),
+(3, 1, '2018-12-15 01:27:34', NULL, NULL, 1, 'Host Behaviour', '2'),
+(4, 1, '2018-12-10 22:22:31', NULL, NULL, 1, 'Customer Behaviour', '3');
 
 -- --------------------------------------------------------
 

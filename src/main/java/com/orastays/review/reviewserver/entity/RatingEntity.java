@@ -37,9 +37,9 @@ public class RatingEntity extends CommonEntity {
 	@JsonProperty("ratingName")
 	private String ratingName;
 	
-	@Column(name = "rating_flag")
-	@JsonProperty("ratingFlag")
-	private String ratingFlag;
+	@Column(name = "user_type_id")
+	@JsonProperty("userTypeId")
+	private String userTypeId;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ratingEntity", cascade = { CascadeType.ALL })
 	@JsonProperty("bookingVsRatings")

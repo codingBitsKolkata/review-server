@@ -24,8 +24,8 @@ public class RatingModel extends CommonModel {
 	@JsonProperty("ratingName")
 	private String ratingName;
 	
-	@JsonProperty("ratingFlag")
-	private String ratingFlag;
+	@JsonProperty("userTypeId")
+	private String userTypeId;
 	
 	@JsonProperty("bookingVsRatings")
 	private List<BookingVsRatingModel> bookingVsRatingModels;

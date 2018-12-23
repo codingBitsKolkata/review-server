@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.orastays.review.reviewserver.entity.BookingVsRatingEntity;
+import com.orastays.review.reviewserver.entity.RatingEntity;
 import com.orastays.review.reviewserver.entity.UserReviewEntity;
 import com.orastays.review.reviewserver.exceptions.FormExceptions;
 import com.orastays.review.reviewserver.helper.Status;
@@ -47,7 +48,12 @@ public class ReviewServiceImpl extends BaseServiceImpl implements ReviewService 
 			bookingVsRatingEntity.setCreatedBy(Long.parseLong(userReviewModel.getUserId()));
 			bookingVsRatingEntity.setCreatedDate(Util.getCurrentDateTime());
 			bookingVsRatingDAO.save(bookingVsRatingEntity);
+			RatingEntity ratingEntity = new RatingEntity();
+			ratingEntity.setUserTypeId(userReviewModel.getUserTypeId());
+			ratingDAO.save(ratingEntity);
 		}
+
+		
 		
 		if (logger.isInfoEnabled()) {
 			logger.info("addReview -- END");
