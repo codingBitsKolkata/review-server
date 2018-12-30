@@ -50,7 +50,7 @@ public class ReviewValidation extends AuthorizeUserValidation {
 					exceptions.put(messageUtil.getBundle("property.id.number.invalid.code"), new Exception(messageUtil.getBundle("property.id.number.invalid.message")));
 				} 
 				//Call property-list server using Rest template
-				//validateProperty(userReviewModel.getPropertyId());
+				validateProperty(userReviewModel.getPropertyId());
 			}
 			
 			//Check bookingId for null and userId for null
@@ -147,7 +147,7 @@ public class ReviewValidation extends AuthorizeUserValidation {
 		Map<String, Exception> exceptions = new LinkedHashMap<>();
 		BookingModel bookingModel = null;
 		try {
-			ResponseModel responseModel = restTemplate.postForObject("http://192.168.1.108:7085/api/validate-booking", userReviewModel, ResponseModel.class);
+			ResponseModel responseModel = restTemplate.postForObject("http://BOOKING-SERVER/api/validate-booking", userReviewModel, ResponseModel.class);
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(responseModel.getResponseBody());
 			bookingModel = gson.fromJson(jsonString, BookingModel.class);
