@@ -1,6 +1,3 @@
-/**
- * @author Abhideep
- */
 package com.orastays.review.reviewserver.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -17,17 +14,12 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = false)
 @ToString
 @JsonInclude(Include.NON_NULL)
-public class UserModel extends CommonModel {
+public class UserTypeModel extends CommonModel {
 
-	@JsonProperty("userId")
-	private String userId;
 	
-	@JsonProperty("name")
-	private String name;
+	@JsonProperty("userTypeId")
+	private String userTypeId;
 	
-	@JsonProperty("mobileNumber")
-	private String mobileNumber;
-	
-	@JsonProperty("emailId")
-	private String emailId;
+	@JsonProperty("userType")
+	private String userType;
 }
