@@ -19,9 +19,6 @@ public class BookingVsRatingModel extends CommonModel {
 	@JsonProperty("bookingRatingId")
 	private String bookingRatingId;
 	
-	@JsonProperty("propertyId")
-	private String propertyId;
-	
 	@JsonProperty("rating")
 	private String rating;
 	

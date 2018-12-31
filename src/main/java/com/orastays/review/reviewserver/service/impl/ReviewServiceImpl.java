@@ -1,6 +1,5 @@
 package com.orastays.review.reviewserver.service.impl;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.orastays.review.reviewserver.entity.BookingVsRatingEntity;
-import com.orastays.review.reviewserver.entity.RatingEntity;
 import com.orastays.review.reviewserver.entity.UserReviewEntity;
 import com.orastays.review.reviewserver.exceptions.FormExceptions;
 import com.orastays.review.reviewserver.helper.Status;
@@ -48,12 +46,7 @@ public class ReviewServiceImpl extends BaseServiceImpl implements ReviewService 
 			bookingVsRatingEntity.setCreatedBy(Long.parseLong(userReviewModel.getUserId()));
 			bookingVsRatingEntity.setCreatedDate(Util.getCurrentDateTime());
 			bookingVsRatingDAO.save(bookingVsRatingEntity);
-			RatingEntity ratingEntity = new RatingEntity();
-			ratingEntity.setUserTypeId(userReviewModel.getUserTypeId());
-			ratingDAO.save(ratingEntity);
 		}
-
-		
 		
 		if (logger.isInfoEnabled()) {
 			logger.info("addReview -- END");
@@ -68,10 +61,12 @@ public class ReviewServiceImpl extends BaseServiceImpl implements ReviewService 
 		}
 		
 		List<UserReviewModel> userReviewModels = null;
+		reviewValidation.validateProperty(userReviewModel.getPropertyId());
 		try {
 			Map<String, String> innerMap1 = new LinkedHashMap<>();
 			innerMap1.put("status", String.valueOf(Status.ACTIVE.ordinal()));
 			innerMap1.put("propertyId", userReviewModel.getPropertyId());
+			innerMap1.put("userTypeId", userReviewModel.getUserTypeId());
 	
 			Map<String, Map<String, String>> outerMap1 = new LinkedHashMap<>();
 			outerMap1.put("eq", innerMap1);
@@ -79,10 +74,12 @@ public class ReviewServiceImpl extends BaseServiceImpl implements ReviewService 
 			Map<String, Map<String, Map<String, String>>> alliasMap = new LinkedHashMap<>();
 			alliasMap.put(entitymanagerPackagesToScan+".UserReviewEntity", outerMap1);
 			
-			userReviewModels = new ArrayList<>();
 			userReviewModels = userReviewConverter.entityListToModelList(userReviewDAO.fetchListBySubCiteria(alliasMap));
 			
 		} catch (Exception e) {
+			if (logger.isInfoEnabled()) {
+				logger.info("Exception in fetchReview -- "+Util.errorToString(e));
+			}
 		}
 		
 		if (logger.isInfoEnabled()) {
@@ -93,17 +90,18 @@ public class ReviewServiceImpl extends BaseServiceImpl implements ReviewService 
 	}
 
 	@Override
-	public List<RatingModel> fetchRating(String userToken) throws FormExceptions {
+	public List<RatingModel> fetchRating(String userTypeId) throws FormExceptions {
 		
 		if (logger.isInfoEnabled()) {
 			logger.info("fetchRating -- START");
 		}
 		
-		reviewValidation.getUserDetails(userToken);
+		//reviewValidation.getUserDetails(userToken);
 		List<RatingModel> ratingModels = null;
 		try {
 			Map<String, String> innerMap1 = new LinkedHashMap<>();
 			innerMap1.put("status", String.valueOf(Status.ACTIVE.ordinal()));
+			innerMap1.put("userTypeId", userTypeId);
 	
 			Map<String, Map<String, String>> outerMap1 = new LinkedHashMap<>();
 			outerMap1.put("eq", innerMap1);
@@ -111,10 +109,12 @@ public class ReviewServiceImpl extends BaseServiceImpl implements ReviewService 
 			Map<String, Map<String, Map<String, String>>> alliasMap = new LinkedHashMap<>();
 			alliasMap.put(entitymanagerPackagesToScan+".RatingEntity", outerMap1);
 			
-			ratingModels = new ArrayList<>();
 			ratingModels = ratingConverter.entityListToModelList(ratingDAO.fetchListBySubCiteria(alliasMap));
 			
 		} catch (Exception e) {
+			if (logger.isInfoEnabled()) {
+				logger.info("Exception in fetchRating -- "+Util.errorToString(e));
+			}
 		}
 		
 		if (logger.isInfoEnabled()) {

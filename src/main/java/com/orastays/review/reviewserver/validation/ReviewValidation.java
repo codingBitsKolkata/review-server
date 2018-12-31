@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import com.google.gson.Gson;
 import com.orastays.review.reviewserver.entity.RatingEntity;
@@ -22,6 +23,7 @@ import com.orastays.review.reviewserver.model.PropertyModel;
 import com.orastays.review.reviewserver.model.ResponseModel;
 import com.orastays.review.reviewserver.model.UserModel;
 import com.orastays.review.reviewserver.model.UserReviewModel;
+import com.orastays.review.reviewserver.model.UserVsTypeModel;
 
 @Component
 @Transactional
@@ -41,6 +43,18 @@ public class ReviewValidation extends AuthorizeUserValidation {
 		
 		if(Objects.nonNull(userReviewModel) && Objects.nonNull(userModel)) {
 			
+			// Check User Type Id
+			if(StringUtils.isBlank(userReviewModel.getUserTypeId())) {
+				exceptions.put(messageUtil.getBundle("usertype.id.null.code"), new Exception(messageUtil.getBundle("usertype.id.null.message")));
+			} else {
+				if(!CollectionUtils.isEmpty(userModel.getUserVsTypes())) {
+					UserVsTypeModel result1 = userModel.getUserVsTypes().stream() .filter(x -> userReviewModel.getUserTypeId().equals(x.getUserType().getUserTypeId())).findAny().orElse(null);
+					if(Objects.isNull(result1)) {
+						exceptions.put(messageUtil.getBundle("usertype.invalid.null.code"), new Exception(messageUtil.getBundle("usertype.invalid.null.message")));
+					}
+				}
+			}
+			
 			//Check propertyId for null
 			if(StringUtils.isBlank(userReviewModel.getPropertyId())) {
 				exceptions.put(messageUtil.getBundle("property.id.null.code"), new Exception(messageUtil.getBundle("property.id.null.message")));
@@ -49,9 +63,10 @@ public class ReviewValidation extends AuthorizeUserValidation {
 				if(!Util.isNumeric(userReviewModel.getPropertyId())){
 					exceptions.put(messageUtil.getBundle("property.id.number.invalid.code"), new Exception(messageUtil.getBundle("property.id.number.invalid.message")));
 				} 
-				//Call property-list server using Rest template
-				validateProperty(userReviewModel.getPropertyId());
 			}
+			
+			if (exceptions.size() > 0)
+				throw new FormExceptions(exceptions);
 			
 			//Check bookingId for null and userId for null
 			if(StringUtils.isBlank(userReviewModel.getBookingId())) {
@@ -147,13 +162,17 @@ public class ReviewValidation extends AuthorizeUserValidation {
 		Map<String, Exception> exceptions = new LinkedHashMap<>();
 		BookingModel bookingModel = null;
 		try {
-			ResponseModel responseModel = restTemplate.postForObject("http://BOOKING-SERVER/api/validate-booking", userReviewModel, ResponseModel.class);
+			ResponseModel responseModel = restTemplate.postForObject(messageUtil.getBundle("booking.server.url") + "validate-booking", userReviewModel, ResponseModel.class);
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(responseModel.getResponseBody());
 			bookingModel = gson.fromJson(jsonString, BookingModel.class);
 			if(Objects.isNull(bookingModel)) {
 				exceptions.put(messageUtil.getBundle("booking.id.invalid.code"), new Exception(messageUtil.getBundle("booking.id.invalid.message")));
-			} 
+			} else {
+				if(!StringUtils.equals(bookingModel.getPropertyId(), userReviewModel.getPropertyId())) {
+					exceptions.put(messageUtil.getBundle("property.id.invalid.code"), new Exception(messageUtil.getBundle("property.id.invalid.message")));
+				}
+			}
 		} catch (Exception e) {
 				//e.printStackTrace();
 				// Disabled the below line to pass the Token Validation
@@ -168,32 +187,42 @@ public class ReviewValidation extends AuthorizeUserValidation {
 	}
 
 	//Call property-list server with propertyId
-	private void validateProperty(String propertyId) throws FormExceptions {
+	public void validateProperty(String propertyId) throws FormExceptions {
 		
 		if (logger.isInfoEnabled()) {
 			logger.info("validateProperty -- START");
 		}
 		
 		Map<String, Exception> exceptions = new LinkedHashMap<>();
-		//Get the property model with respective fields
-		PropertyModel propertyModel = null;
-		try {
-			ResponseModel responseModel = restTemplate.getForObject("http://PROPERTY-LIST-SERVER/api/check-property?propertyId="+propertyId, ResponseModel.class);
-			propertyModel = (PropertyModel) responseModel.getResponseBody();
-			Gson gson = new Gson();
-			String jsonString = gson.toJson(responseModel.getResponseBody());
-			propertyModel = gson.fromJson(jsonString, PropertyModel.class);
-			if(Objects.isNull(propertyModel)) {
-				exceptions.put(messageUtil.getBundle("property.id.invalid.code"), new Exception(messageUtil.getBundle("property.id.invalid.message")));
-			} 
-		} catch (Exception e) {
-			//e.printStackTrace();
-			// Disabled the below line to pass the Token Validation
-			exceptions.put(messageUtil.getBundle("property.id.invalid.code"), new Exception(messageUtil.getBundle("property.id.invalid.message")));
+		//Check propertyId for null
+		if(StringUtils.isBlank(propertyId)) {
+			exceptions.put(messageUtil.getBundle("property.id.null.code"), new Exception(messageUtil.getBundle("property.id.null.message")));
+		} else {
+			//Check propertyId for number
+			if(!Util.isNumeric(propertyId)){
+				exceptions.put(messageUtil.getBundle("property.id.number.invalid.code"), new Exception(messageUtil.getBundle("property.id.number.invalid.message")));
+			} else {
+				
+				//Get the property model with respective fields
+				PropertyModel propertyModel = null;
+				try {
+					ResponseModel responseModel = restTemplate.getForObject(messageUtil.getBundle("propertylist.server.url") +"fetch-property-by-id?propertyId="+propertyId, ResponseModel.class);
+					Gson gson = new Gson();
+					String jsonString = gson.toJson(responseModel.getResponseBody());
+					propertyModel = gson.fromJson(jsonString, PropertyModel.class);
+					if(Objects.isNull(propertyModel)) {
+						exceptions.put(messageUtil.getBundle("property.id.invalid.code"), new Exception(messageUtil.getBundle("property.id.invalid.message")));
+					} 
+				} catch (Exception e) {
+					//e.printStackTrace();
+					// Disabled the below line to pass the Token Validation
+					exceptions.put(messageUtil.getBundle("property.id.invalid.code"), new Exception(messageUtil.getBundle("property.id.invalid.message")));
+				}
+				
+				if (exceptions.size() > 0)
+					throw new FormExceptions(exceptions);
+			}
 		}
-		
-		if (exceptions.size() > 0)
-			throw new FormExceptions(exceptions);
 		
 		if (logger.isInfoEnabled()) {
 			logger.info("validateProperty -- END");

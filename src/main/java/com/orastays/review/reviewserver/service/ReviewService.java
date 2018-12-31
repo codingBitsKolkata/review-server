@@ -12,5 +12,5 @@ public interface ReviewService {
 
 	List<UserReviewModel> fetchReview(UserReviewModel userReviewModel) throws FormExceptions;
 
-	List<RatingModel> fetchRating(String userToken) throws FormExceptions;
+	List<RatingModel> fetchRating(String userTypeId) throws FormExceptions;
 }

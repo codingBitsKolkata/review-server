@@ -54,7 +54,9 @@ private static final Logger logger = LogManager.getLogger(ReviewController.class
 			@ApiResponse(code = 1106, message = "Invalid rating"),
 			@ApiResponse(code = 1107, message = "Please give rating Id"),
 			@ApiResponse(code = 1108, message = "Rating is not active"),
-			@ApiResponse(code = 1109, message = "You have already reviewed this property")})
+			@ApiResponse(code = 1109, message = "You have already reviewed this property"),
+			@ApiResponse(code = 1110, message = "Please provide user type!!"),
+			@ApiResponse(code = 1111, message = "Invalid user type!!"),})
 	public ResponseEntity<ResponseModel> addReview(@RequestBody UserReviewModel userReviewModel) {
 	
 		if (logger.isInfoEnabled()) {
@@ -153,16 +155,16 @@ private static final Logger logger = LogManager.getLogger(ReviewController.class
 			@ApiResponse(code = 201, message = "Please Try after Sometime!!!"),
 			@ApiResponse(code = 202, message = "Token Required"),
 			@ApiResponse(code = 203, message = "Token Expires!!!Please login to continue...") })
-	public ResponseEntity<ResponseModel> fetchRating(@RequestParam(value = "userToken", required = true) String userToken) {
+	public ResponseEntity<ResponseModel> fetchRating(@RequestParam(value = "userTypeId", required = true) String userTypeId) {
 	
 		if (logger.isInfoEnabled()) {
 			logger.info("fetchRating -- START");
 		}
 
 		ResponseModel responseModel = new ResponseModel();
-		Util.printLog(userToken, ReviewConstant.INCOMING, "Fetch Rating", request);
+		Util.printLog(userTypeId, ReviewConstant.INCOMING, "Fetch Rating", request);
 		try {
-			List<RatingModel> ratingModels = reviewService.fetchRating(userToken);
+			List<RatingModel> ratingModels = reviewService.fetchRating(userTypeId);
 			responseModel.setResponseBody(ratingModels);
 			responseModel.setResponseCode(messageUtil.getBundle(ReviewConstant.COMMON_SUCCESS_CODE));
 			responseModel.setResponseMessage(messageUtil.getBundle(ReviewConstant.COMMON_SUCCESS_MESSAGE));

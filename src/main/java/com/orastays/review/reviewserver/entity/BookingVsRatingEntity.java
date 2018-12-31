@@ -32,14 +32,10 @@ public class BookingVsRatingEntity extends CommonEntity {
 	@JsonProperty("bookingRatingId")
 	private Long bookingRatingId;
 
-	@Column(name = "property_id")
-	@JsonProperty("propertyId")
-	private Long propertyId;
-
 	@Column(name = "rating")
 	@JsonProperty("rating")
 	private String rating;
-
+	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
 	@JoinColumn(name = "user_review_id", nullable = false)
 	@JsonProperty("userReview")
