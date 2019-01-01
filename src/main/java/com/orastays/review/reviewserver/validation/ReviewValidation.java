@@ -61,7 +61,7 @@ public class ReviewValidation extends AuthorizeUserValidation {
 			} else {
 				//Check propertyId for number
 				if(!Util.isNumeric(userReviewModel.getPropertyId())){
-					exceptions.put(messageUtil.getBundle("property.id.number.invalid.code"), new Exception(messageUtil.getBundle("property.id.number.invalid.message")));
+					exceptions.put(messageUtil.getBundle("property.id.invalid.code"), new Exception(messageUtil.getBundle("property.id.invalid.message")));
 				} 
 			}
 			
@@ -200,7 +200,7 @@ public class ReviewValidation extends AuthorizeUserValidation {
 		} else {
 			//Check propertyId for number
 			if(!Util.isNumeric(propertyId)){
-				exceptions.put(messageUtil.getBundle("property.id.number.invalid.code"), new Exception(messageUtil.getBundle("property.id.number.invalid.message")));
+				exceptions.put(messageUtil.getBundle("property.id.invalid.code"), new Exception(messageUtil.getBundle("property.id.invalid.message")));
 			} else {
 				
 				//Get the property model with respective fields

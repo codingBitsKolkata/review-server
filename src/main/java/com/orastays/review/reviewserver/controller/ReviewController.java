@@ -39,24 +39,22 @@ private static final Logger logger = LogManager.getLogger(ReviewController.class
 	@ApiOperation(value = "Add Review", response = ResponseModel.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 201, message = "Please Try after Sometime!!!"),
-			@ApiResponse(code = 202, message = "Token Required"),
-			@ApiResponse(code = 203, message = "Token Expires!!!Please login to continue..."),
-			@ApiResponse(code = 204, message = "Language Id Required"),
-			@ApiResponse(code = 205, message = "Invalid Language ID"),
 			@ApiResponse(code = 320, message = "Session expires!!! Please Login to continue..."),
 			@ApiResponse(code = 321, message = "Please give User Token"),
-			@ApiResponse(code = 1100, message = "Please give property Id"),
-			@ApiResponse(code = 1101, message = "Invalid Property"),
-			@ApiResponse(code = 1102, message = "Please give Booking Id"),
-			@ApiResponse(code = 1103, message = "Booking Id invalid"),
-			@ApiResponse(code = 1104, message = "Please write some comment"),
-			@ApiResponse(code = 1105, message = "Please give rating"),
-			@ApiResponse(code = 1106, message = "Invalid rating"),
-			@ApiResponse(code = 1107, message = "Please give rating Id"),
-			@ApiResponse(code = 1108, message = "Rating is not active"),
-			@ApiResponse(code = 1109, message = "You have already reviewed this property"),
-			@ApiResponse(code = 1110, message = "Please provide user type!!"),
-			@ApiResponse(code = 1111, message = "Invalid user type!!"),})
+			@ApiResponse(code = 323, message = "Language Id Required"),
+			@ApiResponse(code = 324, message = "Invalid Language ID"),
+			@ApiResponse(code = 1210, message = "Please provide user type!!"),
+			@ApiResponse(code = 1211, message = "Invalid user type!!"),
+			@ApiResponse(code = 1200, message = "Please give property Id"),
+			@ApiResponse(code = 1201, message = "Invalid Property"),
+			@ApiResponse(code = 1202, message = "Please give Booking Id"),
+			@ApiResponse(code = 1203, message = "Invalid Booking Id"),
+			@ApiResponse(code = 1204, message = "Please write some comment"),
+			@ApiResponse(code = 1205, message = "Please give rating"),
+			@ApiResponse(code = 1206, message = "Invalid rating"),
+			@ApiResponse(code = 1207, message = "Please give rating Id"),
+			@ApiResponse(code = 1208, message = "Rating is not active"),
+			@ApiResponse(code = 1209, message = "You have already reviewed this property") })
 	public ResponseEntity<ResponseModel> addReview(@RequestBody UserReviewModel userReviewModel) {
 	
 		if (logger.isInfoEnabled()) {
@@ -104,7 +102,9 @@ private static final Logger logger = LogManager.getLogger(ReviewController.class
 	@PostMapping(value = "/fetch-review", produces = "application/json")
 	@ApiOperation(value = "Fetch Review", response = ResponseModel.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
-			@ApiResponse(code = 201, message = "Please Try after Sometime!!!") })
+			@ApiResponse(code = 201, message = "Please Try after Sometime!!!"),
+			@ApiResponse(code = 1200, message = "Please give property Id"),
+			@ApiResponse(code = 1201, message = "Invalid Property") })
 	public ResponseEntity<ResponseModel> fetchReview(@RequestBody UserReviewModel userReviewModel) {
 	
 		if (logger.isInfoEnabled()) {
@@ -152,9 +152,7 @@ private static final Logger logger = LogManager.getLogger(ReviewController.class
 	@GetMapping(value = "/fetch-rating", produces = "application/json")
 	@ApiOperation(value = "Fetch Rating", response = ResponseModel.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
-			@ApiResponse(code = 201, message = "Please Try after Sometime!!!"),
-			@ApiResponse(code = 202, message = "Token Required"),
-			@ApiResponse(code = 203, message = "Token Expires!!!Please login to continue...") })
+			@ApiResponse(code = 201, message = "Please Try after Sometime!!!") })
 	public ResponseEntity<ResponseModel> fetchRating(@RequestParam(value = "userTypeId", required = true) String userTypeId) {
 	
 		if (logger.isInfoEnabled()) {
