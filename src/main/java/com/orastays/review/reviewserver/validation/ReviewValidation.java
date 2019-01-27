@@ -34,8 +34,8 @@ public class ReviewValidation extends AuthorizeUserValidation {
 	//Validation while adding review
 	public UserReviewModel validateAddReview(UserReviewModel userReviewModel) throws FormExceptions {
 		
-		if (logger.isDebugEnabled()) {
-			logger.debug("validateAddReview -- Start");
+		if (logger.isInfoEnabled()) {
+			logger.info("validateAddReview -- Start");
 		}
 		
 		Map<String, Exception> exceptions = new LinkedHashMap<>();
@@ -146,8 +146,8 @@ public class ReviewValidation extends AuthorizeUserValidation {
 		if (exceptions.size() > 0)
 			throw new FormExceptions(exceptions);
 		
-		if (logger.isDebugEnabled()) {
-			logger.debug("validateAddReview -- End");
+		if (logger.isInfoEnabled()) {
+			logger.info("validateAddReview -- End");
 		}	
 		return userReviewModel;
 	}
