@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.google.gson.Gson;
 import com.orastays.reviewserver.entity.RatingEntity;
@@ -213,9 +214,14 @@ public class ReviewValidation extends AuthorizeUserValidation {
 					if(Objects.isNull(propertyModel)) {
 						exceptions.put(messageUtil.getBundle("property.id.invalid.code"), new Exception(messageUtil.getBundle("property.id.invalid.message")));
 					} 
+				} catch (HttpClientErrorException e) {
+					if (logger.isInfoEnabled()) {
+						logger.info("Exception in validateProperty -- "+(e.getCause()));
+					}
 				} catch (Exception e) {
-					//e.printStackTrace();
-					// Disabled the below line to pass the Token Validation
+					if (logger.isInfoEnabled()) {
+						logger.info("Exception in validateProperty -- "+Util.errorToString(e));
+					}
 					exceptions.put(messageUtil.getBundle("property.id.invalid.code"), new Exception(messageUtil.getBundle("property.id.invalid.message")));
 				}
 				
