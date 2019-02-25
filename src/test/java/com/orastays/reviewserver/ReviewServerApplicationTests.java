@@ -1,4 +1,4 @@
-package com.orastays.review.reviewserver;
+package com.orastays.reviewserver;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
