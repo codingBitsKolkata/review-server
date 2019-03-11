@@ -29,7 +29,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/api")
+//@RequestMapping("/api")
 @Api(value = "Review", tags = "Review")
 public class ReviewController extends BaseController {
 	
